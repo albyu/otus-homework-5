@@ -1,0 +1,22 @@
+getme:
+  appUsername: otususer
+  appPassword: otususer
+  appDatabase: otusdb
+  appDbUrl: jdbc:postgresql://postgres-service:5432/otusdb
+application:
+  authhost: http://auth-service:8001/auth
+service:
+  name: &serviceName getme-service
+  port: &servicePort 8001
+  type: ClusterIP
+ingress:
+  enabled: true
+  tls: false
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - path: /users/me
+        service:
+          name: *serviceName
+          port: *servicePort

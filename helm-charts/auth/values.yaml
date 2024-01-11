@@ -1,0 +1,28 @@
+auth:
+  appUsername: otususer
+  appPassword: otususer
+  appDatabase: otusdb
+  appDbUrl: jdbc:postgresql://postgres-service:5432/otusdb
+service:
+  name: &serviceName auth-service
+  port: &servicePort 8001
+  type: ClusterIP
+ingress:
+  enabled: true
+  tls: false
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - path: /login
+        service:
+          name: *serviceName
+          port: *servicePort
+      - path: /logout
+        service:
+          name: *serviceName
+          port: *servicePort
+      - path: /register
+        service:
+          name: *serviceName
+          port: *servicePort

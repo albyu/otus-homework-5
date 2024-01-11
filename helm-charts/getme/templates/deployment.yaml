@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "getme.fullname" . }}-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: {{ include "getme.fullname" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "getme.fullname" . }}
+    spec:
+      containers: 
+        - name: getme-app
+          image: aboldyrev1111/otus-homework-5-app:3.0
+          #env
+          env:
+          - name: POSTGRES_APP_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "getme.fullname" . }}-secrets
+                key: appUsername
+          - name: POSTGRES_APP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "getme.fullname" . }}-secrets
+                key: appPassword
+          - name: POSTGRES_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ include "getme.fullname" . }}-secrets
+                key: appDbUrl
+          - name: APP_PORT
+            value: "{{.Values.service.port}}"
+          - name: AUTH_URL
+            value: "{{.Values.application.authhost}}"
+          #volumeMounts
+          volumeMounts:
+          - name: getme-configmap
+            mountPath: /opt/otus-homework/config
+          #livenessProbe
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: web
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 5
+          #readinessProbe
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: web
+            initialDelaySeconds: 15
+            periodSeconds: 2 
+          #ports
+          ports:
+          - name: web
+            containerPort: {{.Values.service.port}}              
+            protocol: TCP
+      volumes:
+        - name: getme-configmap
+          configMap:
+            name: {{ include "getme.fullname" . }}-configmap                  
