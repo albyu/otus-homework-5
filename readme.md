@@ -5,11 +5,17 @@
 ![sequence-diagram](./readme.assets/otus-5-sequence.png)
 
 
-Предпроверки:
+Предпроверки
 
-- Убедитесь, что nginx-ingress установлен и включен в кластере.
-- Убедитесь, что доменное имя arch.homework роутится на хост, на котором установлен minikube.
-
+Убедитесь, что:
+1. nginx-ingress установлен и включен в кластере.
+2. доменное имя arch.homework роутится на хост, на котором установлен minikube.
+3. пути:
+     - http://arch.homework/register
+     - http://arch.homework/login
+     - http://arch.homework/logout
+     - http://arch.homework/users/me 
+   не используются другими сервисами.
 
 Создаем и делаем дефолтным namespace learning
 
